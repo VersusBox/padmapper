@@ -52,10 +52,11 @@ class Padmapper:
                         print("JOYBUTTONUP %d: %d => " % (event.joy, event.button), end='')
                         self.stop_actions(actions)
                 elif event.type == pygame.JOYAXISMOTION:
-                    if event.axis > 1:
-                        continue
                     joyid = str(event.joy)
                     axis = str(event.axis)
+                    if self.config[joyid]['joystick']['ignore'] is not None \
+                            and axis in self.config[joyid]['joystick']['ignore']:
+                        continue
                     direction = str(int(event.value))
                     print("JOYAXISMOTION %d: %d %d => " % (event.joy, event.axis, event.value), end='')
                     if direction != '0':
