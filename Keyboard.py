@@ -13,7 +13,13 @@ class Keyboard:
             return Key[key]
 
     def press(self, key):
-        self.keyboard.press(self.keyname(key))
+        try:
+            self.keyboard.press(self.keyname(key))
+        except KeyError:
+            print("Unable to press unknown keyboard key %s" % key)
 
     def release(self, key):
-        self.keyboard.release(self.keyname(key))
+        try:
+            self.keyboard.release(self.keyname(key))
+        except KeyError:
+            print("Unable to release unknown keyboard key %s" % key)
