@@ -37,6 +37,19 @@ class Padmapper:
             else:
                 self.keyboard.release(action)
 
+    def get_joystick_state(self, joy):
+        numaxes = self.joysticks[joy].get_numaxes()
+        state = []
+        for axis in range(0, numaxes):
+            state.append(int(round(self.joysticks[joy].get_axis(axis))))
+        return state
+
+    def format_joystick_state(self, state):
+        state_str = ""
+        for axis in state:
+            state_str = state_str + str(axis) + ':'
+        return state_str[:-1]
+
     def handle_events(self):
         while True:
             try:
@@ -54,10 +67,10 @@ class Padmapper:
                 elif event.type == pygame.JOYAXISMOTION:
                     joyid = str(event.joy)
                     axis = str(event.axis)
-                    if self.config[joyid]['joystick']['ignore'] is not None \
+                    if self.config[joyid]['joystick'].get('ignore') is not None \
                             and axis in self.config[joyid]['joystick']['ignore']:
                         continue
-                    direction = str(int(event.value))
+                    direction = str(int(round(event.value)))
                     print("JOYAXISMOTION %d: %d %d => " % (event.joy, event.axis, event.value), end='')
                     if direction != '0':
                         actions = self.config[joyid]['joystick'][axis][direction]
@@ -67,5 +80,11 @@ class Padmapper:
                         for direction in self.config[joyid]['joystick'][axis]:
                             actions = actions + self.config[joyid]['joystick'][axis][direction]
                         self.stop_actions(actions)
+                    joy_state = self.format_joystick_state(self.get_joystick_state(event.joy))
+                    for combo in self.config[joyid]['joystick']['combined']:
+                        if combo == joy_state:
+                            self.start_actions(self.config[joyid]['joystick']['combined'][combo])
+                        else:
+                            self.stop_actions(self.config[joyid]['joystick']['combined'][combo])
             except KeyError:
                 pass
