@@ -37,10 +37,19 @@ class Padmapper:
             else:
                 self.keyboard.release(action)
 
+    def is_joystick_axis_ignored(self, joy, axis):
+        joyid = str(joy)
+        if self.config[joyid]['joystick'].get('ignore') is not None \
+                and str(axis) in self.config[joyid]['joystick']['ignore']:
+            return True
+        return False
+
     def get_joystick_state(self, joy):
         numaxes = self.joysticks[joy].get_numaxes()
         state = []
         for axis in range(0, numaxes):
+            if self.is_joystick_axis_ignored(joy, axis):
+                continue
             state.append(int(round(self.joysticks[joy].get_axis(axis))))
         return state
 
@@ -71,11 +80,10 @@ class Padmapper:
                 self.stop_actions(self.config[joyid]['joystick']['combined'][combo])
 
     def handle_joystick_event(self, event):
+        if self.is_joystick_axis_ignored(event.joy, event.axis):
+            return
         joyid = str(event.joy)
         axis = str(event.axis)
-        if self.config[joyid]['joystick'].get('ignore') is not None \
-                and axis in self.config[joyid]['joystick']['ignore']:
-            return
         direction = str(int(round(event.value)))
         print("JOYAXISMOTION %d: %d %d => " % (event.joy, event.axis, event.value), end='')
         if direction != '0':
