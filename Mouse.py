@@ -2,9 +2,18 @@ from time import sleep
 from threading import Thread, Timer, Lock
 from pynput.mouse import Button, Controller
 from Xlib.display import Display
+import weakref
 
 MOUSE_MOVE_STEP = 10
 MOUSE_HIDE_DELAY = 3
+
+def _move_task(weak_self):
+    self = weak_self()
+    while not self.end:
+        sleep(.01)
+        if self.move_step_x == 0 and self.move_step_y == 0:
+            continue
+        self.move(self.move_step_x, self.move_step_y)
 
 class Mouse:
     hide_timer = None
@@ -13,12 +22,14 @@ class Mouse:
     move_step_x = 0
     move_step_y = 0
     mouse_thread = None
+    end = False
     screen = None
     display = None
     mouse = Controller()
 
     def __init__(self):
-        self.mouse_thread = Thread(target=self.move_task)
+        self.mouse_thread = Thread(target=_move_task,
+                args=(weakref.ref(self),), daemon=True)
         self.mouse_thread.start()
         self.display = Display()
         xfixes_version = self.display.xfixes_query_version()
@@ -26,6 +37,7 @@ class Mouse:
         self.screen = self.display.screen()
 
     def __del__(self):
+        self.end = True
         self.mouse_thread.join()
 
     def hide(self):
@@ -68,13 +80,6 @@ class Mouse:
         self.show()
         self.mouse.move(step_x, step_y)
         self.hide_deferred((MOUSE_HIDE_DELAY))
-
-    def move_task(self):
-        while True:
-            sleep(.01)
-            if self.move_step_x == 0 and self.move_step_y == 0:
-                continue
-            self.move(self.move_step_x, self.move_step_y)
 
     def actions(self, actions, release=False):
         for action in actions:

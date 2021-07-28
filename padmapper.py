@@ -2,27 +2,41 @@
 
 import sys
 import json
+from threading import Thread
 
 from Keyboard import Keyboard
 from Mouse import Mouse
 from Padmapper import Padmapper
 
+from time import sleep
+
 if len(sys.argv) != 2:
     print("Usage: %s <config.json>" % sys.argv[0])
     sys.exit(1)
-
-keyboard = Keyboard()
-mouse = Mouse()
-mouse.hide()
 
 config_file = open(sys.argv[1], "r")
 config = json.load(config_file)
 config_file.close()
 
-padmapper = Padmapper(keyboard, mouse, config)
-padmapper.handle_events()
+keyboard = Keyboard()
+mouse = Mouse()
+mouse.hide()
 
-print("Terminating padmapper")
-del padmapper
-del keyboard
-del mouse
+padmapper = Padmapper(keyboard, mouse, config)
+
+def padmapper_task():
+    padmapper.handle_events()
+
+padmapper_thread = Thread(target=padmapper_task, daemon=True)
+padmapper_thread.start()
+
+try:
+    while True:
+        sleep(10)
+except (KeyboardInterrupt, SystemExit):
+    print("Terminating padmapper")
+    padmapper.quit()
+    padmapper_thread.join()
+    del padmapper
+    del keyboard
+    del mouse

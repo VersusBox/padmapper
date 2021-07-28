@@ -97,12 +97,20 @@ class Padmapper:
         self.update_joystick_combined_actions(event)
 
     def handle_events(self):
-        while True:
+        end = False
+        while not end:
             try:
                 event = pygame.event.wait()
                 if event.type == pygame.JOYBUTTONDOWN or event.type == pygame.JOYBUTTONUP:
                     self.handle_button_event(event)
                 elif event.type == pygame.JOYAXISMOTION:
                     self.handle_joystick_event(event)
+                elif event.type == pygame.QUIT:
+                    end = True
             except KeyError:
                 pass
+        pygame.quit()
+
+    def quit(self):
+        quit_event = pygame.event.Event(pygame.QUIT)
+        pygame.event.post(quit_event)
