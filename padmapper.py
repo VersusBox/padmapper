@@ -19,8 +19,7 @@ config = json.load(config_file)
 config_file.close()
 
 keyboard = Keyboard()
-mouse = Mouse()
-mouse.hide()
+mouse = Mouse(config)
 
 padmapper = Padmapper(keyboard, mouse, config)
 
