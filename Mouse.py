@@ -6,6 +6,7 @@ import weakref
 
 MOUSE_MOVE_STEP_DEFAULT = 10
 MOUSE_HIDE_DELAY_DEFAULT = -1
+MOUSE_SWIPE_DIST_DEFAULT = 400
 
 def _move_task(weak_self):
     self = weak_self()
@@ -42,6 +43,10 @@ class Mouse:
                 self.mouse_hide_delay = config['params']['mouse_hide_delay']
             else:
                 self.mouse_hide_delay = MOUSE_HIDE_DELAY_DEFAULT
+            if config['params'].get('mouse_swipe_dist') is not None:
+                self.mouse_swipe_dist = config['params']['mouse_swipe_dist']
+            else:
+                self.mouse_swipe_dist = MOUSE_SWIPE_DIST_DEFAULT
 
         self.mouse_thread = Thread(target=_move_task,
                 args=(weakref.ref(self),), daemon=True)
@@ -84,7 +89,9 @@ class Mouse:
         self.hide_lock.release()
 
     def swipe(self, step_x, step_y):
-        dist = 400
+        if self.mouse_hide_delay >= 0:
+            self.hide()
+        dist = self.mouse_swipe_dist
         x = dist
         y = dist
         self.mouse.position = (x, y)
