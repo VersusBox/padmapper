@@ -1,4 +1,12 @@
+from enum import IntEnum
 import pygame
+
+class CombinedActionsBehavior(IntEnum):
+    ONLY = 1
+    BEFORE = 2
+    AFTER = 3
+
+JOYSTICK_COMBINED_ACTIONS_BEHAVIOR_DEFAULT = CombinedActionsBehavior.AFTER
 
 class Padmapper:
     keyboard = None
@@ -16,6 +24,7 @@ class Padmapper:
             joystick.init()
             print(joystick.get_name())
             self.joysticks.append(joystick)
+            self.joystick_combined_actions_behavior = JOYSTICK_COMBINED_ACTIONS_BEHAVIOR_DEFAULT
 
     def special_actions(self, actions, end=False):
         if actions['mouse'] != None:
@@ -71,13 +80,18 @@ class Padmapper:
             self.stop_actions(actions)
 
     def update_joystick_combined_actions(self, event):
+        ret = False
         joyid = str(event.joy)
+        if self.config[joyid]['joystick'].get('combined') is None:
+            return ret
         joy_state = self.format_joystick_state(self.get_joystick_state(event.joy))
         for combo in self.config[joyid]['joystick']['combined']:
             if combo == joy_state:
                 self.start_actions(self.config[joyid]['joystick']['combined'][combo])
+                ret = True
             else:
                 self.stop_actions(self.config[joyid]['joystick']['combined'][combo])
+        return ret
 
     def handle_joystick_event(self, event):
         if self.is_joystick_axis_ignored(event.joy, event.axis):
@@ -86,6 +100,10 @@ class Padmapper:
         axis = str(event.axis)
         direction = str(int(round(event.value)))
         print("JOYAXISMOTION %d: %d %d => " % (event.joy, event.axis, event.value), end='')
+        if self.joystick_combined_actions_behavior <= CombinedActionsBehavior.BEFORE:
+            ret = self.update_joystick_combined_actions(event)
+            if ret and self.joystick_combined_actions_behavior == CombinedActionsBehavior.ONLY:
+                return
         if direction != '0':
             actions = self.config[joyid]['joystick'][axis][direction]
             self.start_actions(actions)
@@ -94,7 +112,8 @@ class Padmapper:
             for direction in self.config[joyid]['joystick'][axis]:
                 actions = actions + self.config[joyid]['joystick'][axis][direction]
             self.stop_actions(actions)
-        self.update_joystick_combined_actions(event)
+        if self.joystick_combined_actions_behavior == CombinedActionsBehavior.AFTER:
+            self.update_joystick_combined_actions(event)
 
     def handle_events(self):
         end = False
