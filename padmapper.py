@@ -7,6 +7,7 @@ from threading import Thread
 from Keyboard import Keyboard
 from Mouse import Mouse
 from Padmapper import Padmapper
+from Params import Params
 
 from time import sleep
 
@@ -18,10 +19,11 @@ config_file = open(sys.argv[1], "r")
 config = json.load(config_file)
 config_file.close()
 
+params = Params(config)
 keyboard = Keyboard()
-mouse = Mouse(config)
+mouse = Mouse(params)
 
-padmapper = Padmapper(keyboard, mouse, config)
+padmapper = Padmapper(keyboard, mouse, config, params)
 
 def padmapper_task():
     padmapper.handle_events()

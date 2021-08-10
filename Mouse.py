@@ -4,17 +4,13 @@ from pynput.mouse import Button, Controller
 from Xlib.display import Display
 import weakref
 
-MOUSE_MOVE_STEP_DEFAULT = 10
-MOUSE_HIDE_DELAY_DEFAULT = -1
-MOUSE_SWIPE_DIST_DEFAULT = 400
-
 def _move_task(weak_self):
     self = weak_self()
     while not self.end:
         sleep(.01)
         if self.move_step_x == 0 and self.move_step_y == 0:
-            if self.mouse_moving and self.mouse_hide_delay >= 0:
-                self.hide_deferred((self.mouse_hide_delay))
+            if self.mouse_moving and self.params.mouse_hide_delay >= 0:
+                self.hide_deferred((self.params.mouse_hide_delay))
             self.mouse_moving = False
             continue
         self.mouse_moving = True
@@ -32,22 +28,10 @@ class Mouse:
     screen = None
     display = None
     mouse = Controller()
+    params = None
 
-    def __init__(self, config=None):
-        if config.get('params') is not None:
-            if config['params'].get('mouse_move_step') is not None:
-                self.mouse_move_step = config['params']['mouse_move_step']
-            else:
-                self.mouse_move_step = MOUSE_MOVE_STEP_DEFAULT
-            if config['params'].get('mouse_hide_delay') is not None:
-                self.mouse_hide_delay = config['params']['mouse_hide_delay']
-            else:
-                self.mouse_hide_delay = MOUSE_HIDE_DELAY_DEFAULT
-            if config['params'].get('mouse_swipe_dist') is not None:
-                self.mouse_swipe_dist = config['params']['mouse_swipe_dist']
-            else:
-                self.mouse_swipe_dist = MOUSE_SWIPE_DIST_DEFAULT
-
+    def __init__(self, params):
+        self.params = params
         self.mouse_thread = Thread(target=_move_task,
                 args=(weakref.ref(self),), daemon=True)
         self.mouse_thread.start()
@@ -55,7 +39,7 @@ class Mouse:
         xfixes_version = self.display.xfixes_query_version()
         print("XFIXES version %d.%d" % (xfixes_version.major_version, xfixes_version.minor_version))
         self.screen = self.display.screen()
-        if self.mouse_hide_delay >= 0:
+        if self.params.mouse_hide_delay >= 0:
             self.hide()
 
     def __del__(self):
@@ -89,9 +73,9 @@ class Mouse:
         self.hide_lock.release()
 
     def swipe(self, step_x, step_y):
-        if self.mouse_hide_delay >= 0:
+        if self.params.mouse_hide_delay >= 0:
             self.hide()
-        dist = self.mouse_swipe_dist
+        dist = self.params.mouse_swipe_dist
         x = dist
         y = dist
         self.mouse.position = (x, y)
@@ -110,13 +94,13 @@ class Mouse:
                 if action == 'click':
                     self.mouse.click(Button.left, 1)
                 elif action == 'left':
-                    self.move_step_x = -self.mouse_move_step
+                    self.move_step_x = -self.params.mouse_move_step
                 elif action == 'right':
-                    self.move_step_x = self.mouse_move_step
+                    self.move_step_x = self.params.mouse_move_step
                 elif action == 'up':
-                    self.move_step_y = -self.mouse_move_step
+                    self.move_step_y = -self.params.mouse_move_step
                 elif action == 'down':
-                    self.move_step_y = self.mouse_move_step
+                    self.move_step_y = self.params.mouse_move_step
                 if action == 'swipe_left':
                     self.swipe(-1, 0)
                 elif action == 'swipe_right':

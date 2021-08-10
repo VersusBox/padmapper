@@ -1,30 +1,24 @@
-from enum import IntEnum
 import pygame
-
-class CombinedActionsBehavior(IntEnum):
-    ONLY = 1
-    BEFORE = 2
-    AFTER = 3
-
-JOYSTICK_COMBINED_ACTIONS_BEHAVIOR_DEFAULT = CombinedActionsBehavior.AFTER
+from Params import CombinedActionsBehavior
 
 class Padmapper:
     keyboard = None
     mouse = None
     config = None
+    params = None
     joysticks = []
 
-    def __init__(self, keyboard, mouse, config):
+    def __init__(self, keyboard, mouse, config, params):
         self.keyboard = keyboard
         self.mouse = mouse
         self.config = config
+        self.params = params
         pygame.init()
         for i in range(0, pygame.joystick.get_count()):
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
             print(joystick.get_name())
             self.joysticks.append(joystick)
-            self.joystick_combined_actions_behavior = JOYSTICK_COMBINED_ACTIONS_BEHAVIOR_DEFAULT
 
     def special_actions(self, actions, end=False):
         if actions['mouse'] != None:
@@ -100,9 +94,9 @@ class Padmapper:
         axis = str(event.axis)
         direction = str(int(round(event.value)))
         print("JOYAXISMOTION %d: %d %d => " % (event.joy, event.axis, event.value), end='')
-        if self.joystick_combined_actions_behavior <= CombinedActionsBehavior.BEFORE:
+        if self.params.joystick_combined_actions_behavior <= CombinedActionsBehavior.BEFORE:
             ret = self.update_joystick_combined_actions(event)
-            if ret and self.joystick_combined_actions_behavior == CombinedActionsBehavior.ONLY:
+            if ret and self.params.joystick_combined_actions_behavior == CombinedActionsBehavior.ONLY:
                 return
         if direction != '0':
             actions = self.config[joyid]['joystick'][axis][direction]
@@ -112,7 +106,7 @@ class Padmapper:
             for direction in self.config[joyid]['joystick'][axis]:
                 actions = actions + self.config[joyid]['joystick'][axis][direction]
             self.stop_actions(actions)
-        if self.joystick_combined_actions_behavior == CombinedActionsBehavior.AFTER:
+        if self.params.joystick_combined_actions_behavior == CombinedActionsBehavior.AFTER:
             self.update_joystick_combined_actions(event)
 
     def handle_events(self):
