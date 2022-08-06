@@ -93,6 +93,8 @@ class Mouse:
             if not release:
                 if action == 'click':
                     self.mouse.click(Button.left, 1)
+                elif action == 'dbclick':
+                    self.mouse.click(Button.left, 2)
                 elif action == 'left':
                     self.move_step_x = -self.params.mouse_move_step
                 elif action == 'right':
