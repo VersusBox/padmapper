@@ -99,6 +99,8 @@ class Mouse:
                     self.mouse.click(Button.left, 1)
                 elif action == 'dbclick':
                     self.mouse.click(Button.left, 2)
+                if action == 'hold':
+                    self.mouse.press(Button.left)
                 elif action == 'left':
                     self.move_step_x = -self.params.mouse_move_step
                 elif action == 'right':
@@ -130,3 +132,5 @@ class Mouse:
                     self.move_step_x = 0
                 elif action == 'up' or action == 'down':
                     self.move_step_y = 0
+                elif action == 'hold':
+                    self.mouse.release(Button.left)
