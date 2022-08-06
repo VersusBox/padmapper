@@ -86,7 +86,11 @@ class Mouse:
 
     def move(self, step_x, step_y):
         self.show()
-        self.mouse.move(step_x, step_y)
+        if self.params.mouse_move_by_position != 1:
+            self.mouse.move(step_x, step_y)
+        else:
+            # Some game only understand moving by absolute pointer positioning
+            self.mouse.position = (step_x, step_y)
 
     def actions(self, actions, release=False):
         for action in actions:

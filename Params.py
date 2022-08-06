@@ -16,6 +16,7 @@ class Params():
     mouse_move_step = MOUSE_MOVE_STEP_DEFAULT
     mouse_hide_delay = MOUSE_HIDE_DELAY_DEFAULT
     mouse_swipe_dist = MOUSE_SWIPE_DIST_DEFAULT
+    mouse_move_by_position = 0
     joystick_combined_actions_behavior = JOYSTICK_COMBINED_ACTIONS_BEHAVIOR_DEFAULT
 
     def __init__(self, config):
@@ -26,6 +27,8 @@ class Params():
                 self.mouse_hide_delay = config['params']['mouse_hide_delay']
             if config['params'].get('mouse_swipe_dist') is not None:
                 self.mouse_swipe_dist = config['params']['mouse_swipe_dist']
+            if config['params'].get('mouse_move_by_position') is not None:
+                self.mouse_move_by_position = config['params']['mouse_move_by_position']
             if config['params'].get('joystick_combined_actions_behavior') is not None:
                 behavior = config['params']['joystick_combined_actions_behavior']
                 if behavior == "only":
