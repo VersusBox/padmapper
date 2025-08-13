@@ -7,7 +7,11 @@ PKGNAME = padmapper
 PKGFILES = padmapper/__init__.py padmapper/padmapper.py padmapper/padmapper_capture.py padmapper/Padmapper.py padmapper/Keyboard.py padmapper/Params.py padmapper/Mouse.py
 
 all:
-	@echo "Nothing to build, run 'make install' to install."
+	@echo "Run 'make install' to install or 'make wheel' to create wheel distribution."
+
+wheel:
+	python3 -m build
+	@echo "You can now install the wheel using 'pip install .'"
 
 install:
 	# Documentation
