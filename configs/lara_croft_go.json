@@ -1,0 +1,57 @@
+{
+	"params": {
+		"mouse_hide_delay": 3,
+		"mouse_move_step": 5,
+		"joystick_combined_actions_behavior": "only"
+	},
+	"0": {
+		"joystick": {
+			"0": {
+				"-1": ["left", {"mouse": ["swipe_left"]}],
+				"1": ["right", {"mouse": ["swipe_right"]}]
+			},
+			"1": {
+				"-1": ["up", {"mouse": ["swipe_up"]}],
+				"1": ["down", {"mouse": ["swipe_down"]}]
+			},
+			"combined": {
+				"-1:-1": [{"mouse": ["swipe_left_up"]}],
+				"-1:1": [{"mouse": ["swipe_left_down"]}],
+				"1:-1": [{"mouse": ["swipe_right_up"]}],
+				"1:1": [{"mouse": ["swipe_right_down"]}]
+			},
+			"ignore": ["2", "3", "4"]
+		},
+		"buttons": {
+			"0": ["enter"],
+			"1": ["enter"],
+			"2": ["enter"],
+			"3": ["enter"],
+			"6": ["enter"],
+			"7": ["enter"],
+			"9": ["esc"]
+		}
+	},
+	"1": {
+		"joystick": {
+			"0": {
+				"-1": [{"mouse": ["left"]}],
+				"1": [{"mouse": ["right"]}]
+			},
+			"1": {
+				"-1": [{"mouse": ["up"]}],
+				"1": [{"mouse": ["down"]}]
+			},
+			"ignore": ["2", "3", "4"]
+		},
+		"buttons": {
+			"0": [{"mouse": ["click"]}, "enter"],
+			"1": [{"mouse": ["click"]}, "enter"],
+			"2": [{"mouse": ["click"]}, "enter"],
+			"3": [{"mouse": ["click"]}, "enter"],
+			"6": [{"mouse": ["click"]}, "enter"],
+			"7": [{"mouse": ["click"]}, "enter"],
+			"9": ["esc"]
+		}
+	}
+}
