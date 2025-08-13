@@ -3,8 +3,8 @@ BINDIR = $(PREFIX)/bin
 DOCDIR = $(PREFIX)/share/doc/Padmapper
 PYTHON ?= python3
 
-PKGNAME = Padmapper
-PKGFILES = __init__.py padmapper.py padmapper_capture.py Padmapper.py Keyboard.py Params.py Mouse.py
+PKGNAME = padmapper
+PKGFILES = padmapper/__init__.py padmapper/padmapper.py padmapper/padmapper_capture.py padmapper/Padmapper.py padmapper/Keyboard.py padmapper/Params.py padmapper/Mouse.py
 
 all:
 	@echo "Nothing to build, run 'make install' to install."
@@ -18,7 +18,7 @@ install:
 
 	# Main executable
 	install -d "$(BINDIR)"
-	install -m 755 padmapper padmapper-capture "$(BINDIR)/"
+	install -m 755 scripts/padmapper scripts/padmapper-capture "$(BINDIR)/"
 
 	# Python module
 	install -d "$(PREFIX)/lib/$(shell $(PYTHON) -c 'import sys; print("python%d.%d" % sys.version_info[:2])')/site-packages/$(PKGNAME)"

@@ -15,11 +15,15 @@ def configure():
     except KeyboardInterrupt:
         pass
 
-pygame.init()
-joysticks = []
-for i in range(0, pygame.joystick.get_count()):
-    joystick = pygame.joystick.Joystick(i)
-    joystick.init()
-    print(joystick.get_name())
-    joysticks.append(joystick)
-configure()
+def main():
+    pygame.init()
+    joysticks = []
+    for i in range(0, pygame.joystick.get_count()):
+        joystick = pygame.joystick.Joystick(i)
+        joystick.init()
+        print(joystick.get_name())
+        joysticks.append(joystick)
+    configure()
+
+if __name__ == "__main__":
+    main()

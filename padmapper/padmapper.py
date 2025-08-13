@@ -11,7 +11,7 @@ from .Params import Params
 
 from time import sleep
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) != 2:
         print("Usage: %s <config.json>" % sys.argv[0])
         sys.exit(1)
@@ -42,3 +42,6 @@ if __name__ == "__main__":
         del padmapper
         del keyboard
         del mouse
+
+if __name__ == "__main__":
+    main()
