@@ -56,7 +56,7 @@ Each gamepad entry is a dictionary which accept the following sections:
 ##### Buttons
 
 The `buttons` dictionary is inside the [gamepad
-dictionary](#gamepads-settings]).
+dictionary](#gamepads-settings).
 It defines the button identifier (integer) and an array for the actions to do
 when pressed.
 Use `padmapper-capture` to find buttons identifiers.
@@ -68,7 +68,7 @@ See [Actions](#actions) to know what you can do.
 ##### Joystick
 
 The `joystick` dictionary is inside the [gamepad
-dictionary](#gamepads-settings]).
+dictionary](#gamepads-settings).
 It defines the actions to do according to the triggered axis, "0" or "1"
 (vertical or horizontal), and the position, "-1" or "1" (left, right, top,
 down).
@@ -127,7 +127,7 @@ Padmapper game config file, the game binary, and the game parameters:
 padmapper config.json game.bin ...
 ```
 
-##### Get gamepad buttons identifiers
+## Get gamepad buttons identifiers
 
 To get gamepad buttons identifiers, and axis behavior, you can use
 `padmapper-capture`.
