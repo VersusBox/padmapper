@@ -86,7 +86,7 @@ class Mouse:
 
     def move(self, step_x, step_y):
         self.show()
-        if self.params.mouse_move_by_position != 1:
+        if self.params.mouse_move_by_position == False:
             self.mouse.move(step_x, step_y)
         else:
             # Some game only understand moving by absolute pointer positioning
@@ -101,6 +101,12 @@ class Mouse:
                     self.mouse.click(Button.left, 2)
                 if action == 'hold':
                     self.mouse.press(Button.left)
+                if action == 'rclick':
+                    self.mouse.click(Button.right, 1)
+                elif action == 'rdbclick':
+                    self.mouse.click(Button.right, 2)
+                if action == 'rhold':
+                    self.mouse.press(Button.right)
                 elif action == 'left':
                     self.move_step_x = -self.params.mouse_move_step
                 elif action == 'right':

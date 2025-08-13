@@ -16,7 +16,7 @@ class Params():
     mouse_move_step = MOUSE_MOVE_STEP_DEFAULT
     mouse_hide_delay = MOUSE_HIDE_DELAY_DEFAULT
     mouse_swipe_dist = MOUSE_SWIPE_DIST_DEFAULT
-    mouse_move_by_position = 0
+    mouse_move_by_position = False
     joystick_combined_actions_behavior = JOYSTICK_COMBINED_ACTIONS_BEHAVIOR_DEFAULT
 
     def __init__(self, config):
