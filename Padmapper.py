@@ -1,5 +1,5 @@
 import pygame
-from Params import CombinedActionsBehavior
+from .Params import CombinedActionsBehavior
 
 class Padmapper:
     keyboard = None
