@@ -5,14 +5,26 @@ controller inputs.
 So you can press keyboard keys through gamepad buttons, and move mouse cursor
 using a joystick.
 
-## Requirements
+## Installation
+
+X.Org is required, Padmapper is not working with Wayland at this time.
+
+### Using pip
+
+```
+pip install padmapper
+```
+
+### Using Make
 
 Python dependencies:
 
 - pynput
 - pygame
 
-X.Org is required, this is not working with Wayland at this time.
+```
+sudo make install
+```
 
 ## Write games config file
 
